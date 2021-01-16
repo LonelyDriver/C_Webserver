@@ -1,0 +1,19 @@
+#include "error_handling.h"
+
+static const char* error_messages[] = {
+    {"OK"},
+    {"Could not create socket"},
+    {"Invalid ip address or port"},
+    {"Trying to connect to invalid server"},
+    {"Could not connect to server"},
+    {"Buffer invalid size or type"},
+    {"Could not sent data"},
+    {"Could not sent all data"},
+    {"Invalid socket"},
+    {"Receiving data failed"},
+    {"Could not close socket"}
+};
+
+const char* GetErrorMessage(ERRR error){
+    return error_messages[error];
+}
