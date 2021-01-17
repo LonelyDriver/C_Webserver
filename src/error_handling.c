@@ -11,7 +11,10 @@ static const char* error_messages[] = {
     {"Could not sent all data"},
     {"Invalid socket"},
     {"Receiving data failed"},
-    {"Could not close socket"}
+    {"Could not close socket"},
+    {"Could not bind socket"},
+    {"Could not listen socket"},
+    {"Accept socket failed"}
 };
 
 const char* GetErrorMessage(ERRR error){

@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 
     socket_err ret = Connect(&sock, "localhost", 5000);
     printf("Ret: %d, %s\n", ret.error_nb, ret.error_msg);
-    ret = Send(&sock, "Hello from example\n", 19);
+    ret = Send_Tcp(&sock, "Hello from example\n", 19);
     printf("Ret: %d, %s\n", ret.error_nb, ret.error_msg);
     return 0;
 }

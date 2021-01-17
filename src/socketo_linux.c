@@ -54,7 +54,7 @@ socket_err Connect(socket_t* sock, const char* ip, int port) {
     return err;
 }
 
-socket_err Send(socket_t* sock, const char* buffer, size_t size) {
+socket_err Send_Tcp(socket_t* sock, const char* buffer, size_t size) {
     socket_err err = {OK, GetErrorMessage(OK), 0};
     int sent=0;
     int to_sent = size;
@@ -91,7 +91,7 @@ socket_err Send(socket_t* sock, const char* buffer, size_t size) {
     return err;
 }
 
-socket_err Receive(socket_t* sock, char* buffer, size_t size) {
+socket_err Receive_Tcp(socket_t* sock, char* buffer, size_t size) {
     socket_err err = {OK, GetErrorMessage(OK), 0};
     unsigned int received = 0;
 
@@ -131,5 +131,45 @@ socket_err Close(socket_t* sock) {
         err.error_nb = CLOSING_SOCKET_FAILED;
         err.error_msg = GetErrorMessage(err.error_nb);
     }
+    return err;
+}
+
+socket_err Bind(socket_t* sock, unsigned long address, unsigned short port) {
+    socket_err err = {OK, GetErrorMessage(OK), 0};
+    struct sockaddr_in server;
+
+    memset(&server, 0, sizeof(server));
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = htonl(address);
+    server.sin_port = port;
+
+    if((err.error_spec=bind(*sock, (struct sockaddr*)&server, sizeof(server))) < 0) {
+        err.error_nb = COULD_NOT_BIND_SOCKET;
+        err.error_msg = GetErrorMessage(err.error_nb);
+    }
+    return err;
+}
+
+socket_err Listen(socket_t* sock) {
+    socket_err err = {OK, GetErrorMessage(OK), 0};
+    if((err.error_spec=listen(*sock, 5)) == -1) {
+        err.error_nb = COULD_NOT_LISTEN_SOCKET;
+        err.error_msg = GetErrorMessage(err.error_nb);
+    }
+    return err;
+}
+
+socket_err Accept(socket_t* sock, socket_t* new_socket) {
+    socket_err err = {OK, GetErrorMessage(OK), 0};
+    struct sockaddr_in client;
+    unsigned int len;
+
+    len = sizeof(client);
+    *new_socket = accept(*sock, (struct sockaddr*)&client, &len);
+    if(*new_socket == -1) {
+        err.error_nb = ACCEPT_SOCKET_FAILED;
+        err.error_msg = GetErrorMessage(err.error_nb);
+    }
+    printf("Connected to client with address: %s\n", inet_ntoa(client.sin_addr));
     return err;
 }

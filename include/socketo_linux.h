@@ -25,9 +25,12 @@ typedef struct socket_err_ {
 
 socket_t Create_Socket(int af, int type, int protocol);
 socket_err Connect(socket_t* sock, const char* ip, int port);
-socket_err Send(socket_t* sock, const char* buffer, size_t size);
-socket_err Receive(socket_t* sock, char* buffer, size_t size);
+socket_err Send_Tcp(socket_t* sock, const char* buffer, size_t size);
+socket_err Receive_Tcp(socket_t* sock, char* buffer, size_t size);
 socket_err Close(socket_t* sock);
+socket_err Bind(socket_t* sock, unsigned long address, unsigned short port);
+socket_err Listen(socket_t* sock);
+socket_err Accept(socket_t* sock, socket_t* new_socket);
 
 
 #endif // _SOCKETO_H
