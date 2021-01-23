@@ -25,13 +25,15 @@ find_package(Threads)
 
 option(testing "Execute tests" OFF)
 
-add_executable(testo src/examples/example1.c
-    src/error_handling.c)
+add_executable(testo src/examples/example1.c)
 target_include_directories(testo PRIVATE include)
-if(UNIX)
-target_sources(testo PRIVATE src/socketo_linux.c)
-elseif(WIN32)
-message("Socket abstraction layer for windows not implemented")
-endif()
 
-#add_subdirectory(include)
+add_executable(thread_test src/examples/thread_example.c)
+target_include_directories(thread_test PRIVATE include/threads)
+target_link_libraries(thread_test Threads::Threads)
+
+add_subdirectory(src)
+
+if(testing)
+add_subdirectory(tests)
+endif()

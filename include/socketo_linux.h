@@ -11,29 +11,17 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "error_handling.h"
 
 #define socket_t    int
 
-#ifndef _SOCKETO_H
-#define _SOCKETO_H
-
-typedef struct socket_err_ {
-    int error_nb;
-    const char* error_msg;
-    int error_spec;
-} socket_err;
-
 socket_t Create_Socket(int af, int type, int protocol);
-socket_err Connect(socket_t* sock, const char* ip, int port);
-socket_err Send_Tcp(socket_t* sock, const char* buffer, size_t size);
-socket_err Receive_Tcp(socket_t* sock, char* buffer, size_t size);
-socket_err Close(socket_t* sock);
-socket_err Bind(socket_t* sock, unsigned long address, unsigned short port);
-socket_err Listen(socket_t* sock);
-socket_err Accept(socket_t* sock, socket_t* new_socket);
-
-
-#endif // _SOCKETO_H
-
+err_t Connect(socket_t* sock, const char* ip, int port);
+err_t Send_Tcp(socket_t* sock, const char* buffer, size_t size);
+unsigned int Receive_Tcp(socket_t* sock, char* buffer, size_t size);
+err_t Close(socket_t* sock);
+err_t Bind(socket_t* sock, unsigned long address, unsigned short port);
+err_t Listen(socket_t* sock);
+err_t Accept(socket_t* sock, socket_t* new_socket);
 
 #endif // _SOCKETO_WRAP_H

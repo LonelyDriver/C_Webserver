@@ -1,6 +1,6 @@
 #include "error_handling.h"
 
-static const char* error_messages[] = {
+static const char* socket_errors[] = {
     {"OK"},
     {"Could not create socket"},
     {"Invalid ip address or port"},
@@ -18,5 +18,5 @@ static const char* error_messages[] = {
 };
 
 const char* GetErrorMessage(ERRR error){
-    return error_messages[error];
+    return socket_errors[error];
 }

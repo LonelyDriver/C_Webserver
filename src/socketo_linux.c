@@ -1,6 +1,18 @@
 #include "socketo_linux.h"
 #include "error_handling.h"
 
+/**
+ * @brief   https://man7.org/linux/man-pages/man2/socket.2.html
+ *          AF_INET = IPv4
+ *          TYPE = SOCK_STREAM (Provides sequenced, reliable, two-way, connection-based
+                                byte streams.)
+ * 
+ * @param af 
+ * @param type 
+ * @param protocol 
+ * @return socket_t 
+ */
+
 socket_t Create_Socket(int af, int type, int protocol) {
     socket_t sock;
     int ret;
@@ -17,8 +29,8 @@ socket_t Create_Socket(int af, int type, int protocol) {
     return sock;
 }
 
-socket_err Connect(socket_t* sock, const char* ip, int port) {
-    socket_err err = {OK, GetErrorMessage(OK), 0};
+err_t Connect(socket_t* sock, const char* ip, int port) {
+    err_t err = {OK, GetErrorMessage(OK), 0};
     struct sockaddr_in server;
     struct hostent* host_info;
     unsigned long addr;
@@ -54,17 +66,11 @@ socket_err Connect(socket_t* sock, const char* ip, int port) {
     return err;
 }
 
-socket_err Send_Tcp(socket_t* sock, const char* buffer, size_t size) {
-    socket_err err = {OK, GetErrorMessage(OK), 0};
+err_t Send_Tcp(socket_t* sock, const char* buffer, size_t size) {
+    err_t err = {OK, GetErrorMessage(OK), 0};
     int sent=0;
     int to_sent = size;
     int trys = 0;
-
-    if(buffer == NULL || size <= 0){
-        err.error_nb = BUFFER_INVALID;
-        err.error_msg = GetErrorMessage(err.error_nb);
-        return err;
-    }
 
     if(*sock < 0) {
         err.error_nb = SOCKET_INVALID;
@@ -91,35 +97,20 @@ socket_err Send_Tcp(socket_t* sock, const char* buffer, size_t size) {
     return err;
 }
 
-socket_err Receive_Tcp(socket_t* sock, char* buffer, size_t size) {
-    socket_err err = {OK, GetErrorMessage(OK), 0};
+unsigned int Receive_Tcp(socket_t* sock, char* buffer, size_t size) {
     unsigned int received = 0;
 
-    if(buffer == NULL || size <= 0){
-        err.error_nb = BUFFER_INVALID;
-        err.error_msg = GetErrorMessage(err.error_nb);
-        return err;
-    }
-
     if(*sock < 0) {
-        err.error_nb = SOCKET_INVALID;
-        err.error_msg = GetErrorMessage(err.error_nb);
-        return err;
+        printf("%s\n",GetErrorMessage(SOCKET_INVALID));
+        return -1;
     }
 
     received = recv(*sock, buffer, size, 0);
-    if(received > 0 || received != -1){
-        buffer[received] = '\n';
-    }else {
-        err.error_nb = RECEIVING_FAILED;
-        err.error_msg = GetErrorMessage(err.error_nb);
-        err.error_spec = received;
-    }
-    return err;
+    return received;
 }
 
-socket_err Close(socket_t* sock) {
-    socket_err err = {OK, GetErrorMessage(OK), 0};
+err_t Close(socket_t* sock) {
+    err_t err = {OK, GetErrorMessage(OK), 0};
 
     if(*sock < 0){
         err.error_nb = SOCKET_INVALID;
@@ -134,15 +125,16 @@ socket_err Close(socket_t* sock) {
     return err;
 }
 
-socket_err Bind(socket_t* sock, unsigned long address, unsigned short port) {
-    socket_err err = {OK, GetErrorMessage(OK), 0};
+err_t Bind(socket_t* sock, unsigned long address, unsigned short port) {
+    err_t err = {OK, GetErrorMessage(OK), 0};
     struct sockaddr_in server;
 
     memset(&server, 0, sizeof(server));
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = htonl(address);
-    server.sin_port = port;
+    server.sin_port = htons(port);
 
+    printf("Listen on port: %d\n", port);
     if((err.error_spec=bind(*sock, (struct sockaddr*)&server, sizeof(server))) < 0) {
         err.error_nb = COULD_NOT_BIND_SOCKET;
         err.error_msg = GetErrorMessage(err.error_nb);
@@ -150,8 +142,8 @@ socket_err Bind(socket_t* sock, unsigned long address, unsigned short port) {
     return err;
 }
 
-socket_err Listen(socket_t* sock) {
-    socket_err err = {OK, GetErrorMessage(OK), 0};
+err_t Listen(socket_t* sock) {
+    err_t err = {OK, GetErrorMessage(OK), 0};
     if((err.error_spec=listen(*sock, 5)) == -1) {
         err.error_nb = COULD_NOT_LISTEN_SOCKET;
         err.error_msg = GetErrorMessage(err.error_nb);
@@ -159,8 +151,8 @@ socket_err Listen(socket_t* sock) {
     return err;
 }
 
-socket_err Accept(socket_t* sock, socket_t* new_socket) {
-    socket_err err = {OK, GetErrorMessage(OK), 0};
+err_t Accept(socket_t* sock, socket_t* new_socket) {
+    err_t err = {OK, GetErrorMessage(OK), 0};
     struct sockaddr_in client;
     unsigned int len;
 

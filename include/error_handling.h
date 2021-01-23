@@ -18,6 +18,12 @@ typedef enum ERRR_ {
     ACCEPT_SOCKET_FAILED
 } ERRR;
 
+typedef struct _err_ {
+    int error_nb;
+    const char* error_msg;
+    int error_spec;
+} err_t;
+
 const char* GetErrorMessage(ERRR error);
 
 #endif
