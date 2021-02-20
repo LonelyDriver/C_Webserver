@@ -14,7 +14,11 @@ static const char* socket_errors[] = {
     {"Could not close socket"},
     {"Could not bind socket"},
     {"Could not listen socket"},
-    {"Accept socket failed"}
+    {"Accept socket failed"},
+    {"Not enough memory"},
+    {"Invalid server handle"},
+    {"Could not create main thread"},
+    {"Invalid thread info"}
 };
 
 const char* GetErrorMessage(ERRR error){

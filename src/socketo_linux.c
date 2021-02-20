@@ -30,7 +30,7 @@ socket_t Create_Socket(int af, int type, int protocol) {
 }
 
 err_t Connect(socket_t* sock, const char* ip, int port) {
-    err_t err = {OK, GetErrorMessage(OK), 0};
+    err_t err = {OK_ERROR, GetErrorMessage(OK_ERROR), 0};
     struct sockaddr_in server;
     struct hostent* host_info;
     unsigned long addr;
@@ -67,7 +67,7 @@ err_t Connect(socket_t* sock, const char* ip, int port) {
 }
 
 err_t Send_Tcp(socket_t* sock, const char* buffer, size_t size) {
-    err_t err = {OK, GetErrorMessage(OK), 0};
+    err_t err = {OK_ERROR, GetErrorMessage(OK_ERROR), 0};
     int sent=0;
     int to_sent = size;
     int trys = 0;
@@ -110,7 +110,7 @@ unsigned int Receive_Tcp(socket_t* sock, char* buffer, size_t size) {
 }
 
 err_t Close(socket_t* sock) {
-    err_t err = {OK, GetErrorMessage(OK), 0};
+    err_t err = {OK_ERROR, GetErrorMessage(OK_ERROR), 0};
 
     if(*sock < 0){
         err.error_nb = SOCKET_INVALID;
@@ -126,7 +126,7 @@ err_t Close(socket_t* sock) {
 }
 
 err_t Bind(socket_t* sock, unsigned long address, unsigned short port) {
-    err_t err = {OK, GetErrorMessage(OK), 0};
+    err_t err = {OK_ERROR, GetErrorMessage(OK_ERROR), 0};
     struct sockaddr_in server;
 
     memset(&server, 0, sizeof(server));
@@ -143,7 +143,7 @@ err_t Bind(socket_t* sock, unsigned long address, unsigned short port) {
 }
 
 err_t Listen(socket_t* sock) {
-    err_t err = {OK, GetErrorMessage(OK), 0};
+    err_t err = {OK_ERROR, GetErrorMessage(OK_ERROR), 0};
     if((err.error_spec=listen(*sock, 5)) == -1) {
         err.error_nb = COULD_NOT_LISTEN_SOCKET;
         err.error_msg = GetErrorMessage(err.error_nb);
@@ -152,7 +152,7 @@ err_t Listen(socket_t* sock) {
 }
 
 err_t Accept(socket_t* sock, socket_t* new_socket) {
-    err_t err = {OK, GetErrorMessage(OK), 0};
+    err_t err = {OK_ERROR, GetErrorMessage(OK_ERROR), 0};
     struct sockaddr_in client;
     unsigned int len;
 

@@ -4,7 +4,7 @@
 #define VERSION_MAJOR ""
 #define VERSION_MINOR ""
 #define VERSION_PATCH ""
-#define VERSION "0.0.1"
+#define VERSION "0.0.0"
 
 const char* GetVersion() {
     return VERSION;

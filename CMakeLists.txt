@@ -13,7 +13,7 @@ endif()
 
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "0")
-set(VERSION_PATCH "1")
+set(VERSION_PATCH "0")
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 set(TESTS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/tests)
@@ -25,14 +25,23 @@ find_package(Threads)
 
 option(testing "Execute tests" OFF)
 
-add_executable(testo src/examples/example1.c)
-target_include_directories(testo PRIVATE include)
+add_executable(socket_example src/examples/socket_example.c)
+target_include_directories(socket_example PRIVATE include)
 
-add_executable(thread_test src/examples/thread_example.c)
-target_include_directories(thread_test PRIVATE include/threads)
-target_link_libraries(thread_test Threads::Threads)
+add_executable(thread_example src/examples/thread_example.c)
+target_include_directories(thread_example PRIVATE include/threads)
+target_link_libraries(thread_example Threads::Threads)
+
+add_executable(web_serv_example src/examples/web_serv_example.c)
+target_include_directories(
+    web_serv_example 
+    PRIVATE include
+    include 
+    include/threads)
+target_link_libraries(web_serv_example Threads::Threads)
 
 add_subdirectory(src)
+add_subdirectory(Unity)
 
 if(testing)
 add_subdirectory(tests)
